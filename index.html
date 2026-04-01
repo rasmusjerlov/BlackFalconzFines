@@ -1,697 +1,352 @@
 <!DOCTYPE html>
 <html lang="da">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Black Falconz — Bødekasse</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg:       #0f0f0f;
-      --surf:     #1a1a1a;
-      --surf2:    #222;
-      --surf3:    #2a2a2a;
-      --border:   #2d2d2d;
-      --border2:  #3a3a3a;
-      --accent:   #f59e0b;
-      --accent-d: #d97706;
-      --accent-x: rgba(245,158,11,0.1);
-      --text:     #e5e7eb;
-      --text2:    #9ca3af;
-      --text3:    #6b7280;
-      --red:      #ef4444;
-      --r:        8px;
-      --r-sm:     5px;
-    }
-
-    body {
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-    }
-
-    ::-webkit-scrollbar { width: 5px; }
-    ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
-
-    /* ── HEADER ── */
-    .hdr {
-      background: var(--surf);
-      border-bottom: 1px solid var(--border);
-      height: 60px;
-      padding: 0 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 50;
-    }
-    .hdr-brand { display: flex; align-items: center; gap: 10px; }
-    .hdr-icon  { font-size: 1.6rem; line-height: 1; }
-    .hdr-name  {
-      font-size: 1rem; font-weight: 800;
-      letter-spacing: .08em; text-transform: uppercase;
-      color: var(--accent);
-    }
-    .hdr-sub {
-      font-size: .65rem; letter-spacing: .1em;
-      text-transform: uppercase; color: var(--text3);
-    }
-
-    /* ── BUTTONS ── */
-    .btn {
-      border: none; border-radius: var(--r-sm);
-      cursor: pointer; font: 600 .85rem/1 'Segoe UI', sans-serif;
-      letter-spacing: .03em; padding: 8px 16px;
-      transition: background .15s, transform .1s;
-    }
-    .btn:active { transform: scale(.97); }
-    .btn-primary { background: var(--accent); color: #000; }
-    .btn-primary:hover { background: var(--accent-d); }
-    .btn-secondary {
-      background: transparent; border: 1px solid var(--border2); color: var(--text2);
-    }
-    .btn-secondary:hover { color: var(--text); border-color: var(--text3); }
-    .btn-icon {
-      background: none; border: none; cursor: pointer;
-      color: var(--text3); font-size: .9rem; padding: 4px 6px;
-      transition: color .15s;
-    }
-    .btn-icon:hover { color: var(--red); }
-
-    /* ── LAYOUT ── */
-    .main {
-      max-width: 1360px; margin: 0 auto; padding: 28px 18px 60px;
-      display: grid;
-      grid-template-columns: 1fr 300px;
-      gap: 28px;
-      align-items: start;
-    }
-    .main-col { min-width: 0; }
-    .sidebar {
-      position: sticky;
-      top: 72px;
-      max-height: calc(100vh - 88px);
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 0;
-    }
-    .sec  { margin-bottom: 36px; }
-    .sec-head {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 14px; gap: 12px;
-    }
-    .sec-title {
-      font-size: .72rem; font-weight: 700;
-      letter-spacing: .12em; text-transform: uppercase; color: var(--text2);
-    }
-    .sec-meta { font-size: .78rem; color: var(--text3); }
-
-    /* ── PLAYER GRID ── */
-    .pgrid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
-      gap: 10px;
-    }
-    .pcard {
-      background: var(--surf); border: 1px solid var(--border);
-      border-radius: var(--r); padding: 18px 10px 14px;
-      text-align: center; cursor: pointer;
-      transition: border-color .15s, box-shadow .15s, transform .1s;
-      user-select: none;
-    }
-    .pcard:hover {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 1px var(--accent), 0 4px 14px rgba(245,158,11,.12);
-      transform: translateY(-1px);
-    }
-    .pavatar {
-      width: 44px; height: 44px; border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent-d), var(--accent));
-      color: #000; font-weight: 800; font-size: 1rem;
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 10px;
-    }
-    .pname   { font-size: .88rem; font-weight: 600; margin-bottom: 5px; }
-    .pamount { font-size: 1.4rem; font-weight: 800; color: var(--accent); line-height: 1; }
-    .plabel  {
-      font-size: .62rem; font-weight: 600; letter-spacing: .07em;
-      text-transform: uppercase; color: var(--text3); margin-top: 2px;
-    }
-
-    /* ── TABS ── */
-    .tabs { display: flex; flex-wrap: wrap; gap: 4px; }
-    .tab  {
-      background: var(--surf); border: 1px solid var(--border);
-      border-radius: 20px; padding: 4px 11px;
-      font-size: .75rem; font-weight: 500; color: var(--text2);
-      cursor: pointer; transition: all .15s;
-    }
-    .tab:hover { border-color: var(--border2); color: var(--text); }
-    .tab.act { background: var(--accent); border-color: var(--accent); color: #000; font-weight: 700; }
-
-    /* ── HISTORY TABLE ── */
-    .htable {
-      background: var(--surf); border: 1px solid var(--border);
-      border-radius: var(--r); overflow: hidden;
-    }
-    .hrow {
-      display: flex; align-items: flex-start;
-      gap: 12px; padding: 13px 16px;
-      border-bottom: 1px solid var(--border);
-      transition: background .1s;
-    }
-    .hrow:last-child { border-bottom: none; }
-    .hrow:hover { background: var(--surf2); }
-    .hrow-player { font-size: .88rem; font-weight: 700; min-width: 72px; padding-top: 1px; }
-    .hrow-content { flex: 1; min-width: 0; }
-    .hrow-tags { display: flex; flex-wrap: wrap; gap: 3px; }
-    .htag {
-      display: inline-flex; align-items: center; gap: 4px;
-      background: var(--surf3); border-radius: 3px;
-      padding: 2px 7px; font-size: .72rem; color: var(--text2);
-    }
-    .htag-id { color: var(--accent); font-weight: 700; }
-    .hrow-note { font-size: .75rem; color: var(--text3); font-style: italic; margin-top: 4px; }
-    .hrow-right { text-align: right; flex-shrink: 0; }
-    .hrow-amount { font-size: 1rem; font-weight: 800; color: var(--accent); }
-    .hrow-date { font-size: .7rem; color: var(--text3); margin-top: 2px; }
-    .hempty { padding: 40px; text-align: center; color: var(--text3); font-size: .88rem; }
-
-    /* ── MODAL ── */
-    .moverlay {
-      display: none; position: fixed; inset: 0;
-      background: rgba(0,0,0,.72); z-index: 200;
-      align-items: center; justify-content: center;
-      padding: 14px; backdrop-filter: blur(2px);
-    }
-    .moverlay.open { display: flex; }
-    .mdialog {
-      background: var(--surf); border: 1px solid var(--border2);
-      border-radius: 14px; width: 100%;
-      max-width: 600px; max-height: min(92vh, 840px);
-      display: flex; flex-direction: column; overflow: hidden;
-      box-shadow: 0 24px 64px rgba(0,0,0,.7);
-    }
-    .mhead {
-      padding: 16px 20px; border-bottom: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: space-between;
-      flex-shrink: 0;
-    }
-    .mhead-title { font-size: .95rem; font-weight: 700; }
-    .mclose {
-      background: none; border: none; color: var(--text3);
-      cursor: pointer; font-size: 1.25rem; line-height: 1;
-      padding: 2px 6px; transition: color .15s;
-    }
-    .mclose:hover { color: var(--text); }
-    .mbody { padding: 20px; overflow-y: auto; flex: 1; }
-    .mfoot {
-      padding: 12px 20px; border-top: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: space-between;
-      flex-shrink: 0; gap: 10px;
-    }
-    .mtotal { font-size: .84rem; color: var(--text2); }
-    .mtotal strong { font-size: 1.2rem; color: var(--accent); margin-left: 5px; }
-
-    /* ── FORM ── */
-    .fg { margin-bottom: 20px; }
-    .fg:last-child { margin-bottom: 0; }
-    .flabel {
-      display: block; font-size: .7rem; font-weight: 700;
-      letter-spacing: .12em; text-transform: uppercase;
-      color: var(--text2); margin-bottom: 9px;
-    }
-
-    .chips { display: flex; flex-wrap: wrap; gap: 7px; }
-    .chip {
-      background: var(--surf2); border: 1.5px solid var(--border);
-      border-radius: 20px; padding: 5px 13px;
-      font-size: .84rem; font-weight: 500;
-      cursor: pointer; transition: all .15s; user-select: none;
-    }
-    .chip:hover { border-color: var(--border2); }
-    .chip.sel { background: var(--accent); border-color: var(--accent); color: #000; font-weight: 700; }
-
-    .rlist { display: flex; flex-direction: column; gap: 5px; }
-    .rrow {
-      background: var(--surf2); border: 1.5px solid var(--border);
-      border-radius: var(--r-sm); cursor: pointer;
-      transition: border-color .15s, background .15s;
-      user-select: none; overflow: hidden;
-    }
-    .rrow:hover { border-color: var(--border2); }
-    .rrow.sel { border-color: var(--accent); background: var(--accent-x); }
-    .rrow-top {
-      display: grid; grid-template-columns: 58px 1fr auto;
-      align-items: start; gap: 8px; padding: 9px 11px;
-    }
-    .rrow-id { font-size: .7rem; font-weight: 800; color: var(--accent); letter-spacing: .02em; padding-top: 1px; }
-    .rrow-texts { min-width: 0; }
-    .rrow-title { font-size: .82rem; font-weight: 600; line-height: 1.3; }
-    .rrow-full  { font-size: .73rem; color: var(--text2); margin-top: 2px; line-height: 1.4; }
-    .rrow-amt   { font-size: .82rem; font-weight: 700; color: var(--accent); white-space: nowrap; padding-top: 1px; }
-
-    .rextra { padding: 9px 11px 11px; border-top: 1px solid var(--border); display: none; }
-    .rrow.sel .rextra { display: block; }
-    .rextra-lbl { font-size: .73rem; color: var(--text2); display: block; margin-bottom: 6px; }
-    .rextra-check {
-      display: flex; align-items: center; gap: 7px;
-      font-size: .78rem; color: var(--text2); cursor: pointer;
-    }
-    .rextra-check input { accent-color: var(--accent); width: 14px; height: 14px; cursor: pointer; }
-    .rextra input[type=number] {
-      background: var(--surf3); border: 1px solid var(--border2);
-      border-radius: var(--r-sm); color: var(--text);
-      padding: 5px 9px; font-size: .82rem; width: 120px;
-    }
-    .rextra input[type=number]:focus { outline: none; border-color: var(--accent); }
-    .rextra-hint { font-size: .7rem; color: var(--accent); margin-top: 4px; min-height: 16px; }
-
-    .fnote {
-      background: var(--surf2); border: 1.5px solid var(--border);
-      border-radius: var(--r-sm); color: var(--text);
-      padding: 9px 11px; font: .84rem/1.5 'Segoe UI', sans-serif;
-      width: 100%; resize: vertical; min-height: 60px;
-      transition: border-color .15s;
-    }
-    .fnote:focus { outline: none; border-color: var(--accent); }
-
-    /* ── RULES SIDEBAR ── */
-    .reg-table {
-      background: var(--surf); border: 1px solid var(--border);
-      border-radius: var(--r); overflow: hidden;
-    }
-    .reg-row {
-      display: grid; grid-template-columns: 64px 1fr auto;
-      align-items: start; gap: 8px;
-      padding: 9px 12px; border-bottom: 1px solid var(--border);
-      transition: background .1s;
-    }
-    .reg-row:last-child { border-bottom: none; }
-    .reg-row:hover { background: var(--surf2); }
-    .reg-id {
-      font-size: .68rem; font-weight: 800;
-      color: var(--accent); letter-spacing: .02em;
-      padding-top: 2px; white-space: nowrap;
-    }
-    .reg-text { font-size: .78rem; line-height: 1.45; color: var(--text); }
-    .reg-sub  { font-size: .71rem; color: var(--text3); margin-top: 3px; line-height: 1.35; }
-    .reg-amt  {
-      font-size: .78rem; font-weight: 700; color: var(--accent);
-      white-space: nowrap; padding-top: 2px; text-align: right;
-    }
-    .reg-del {
-      background: none; border: none; cursor: pointer;
-      color: var(--text3); font-size: .8rem; padding: 0 2px;
-      line-height: 1; transition: color .15s; flex-shrink: 0;
-    }
-    .reg-del:hover { color: var(--red); }
-
-    /* ── VIOLATION STATS TABLE ── */
-    .vstable {
-      background: var(--surf); border: 1px solid var(--border);
-      border-radius: var(--r); overflow-x: auto;
-    }
-    .vstable table { width: 100%; border-collapse: collapse; min-width: 560px; }
-    .vstable th {
-      font-size: .63rem; font-weight: 700; letter-spacing: .1em;
-      text-transform: uppercase; color: var(--text3);
-      padding: 8px 10px; text-align: center; border-bottom: 1px solid var(--border);
-      white-space: nowrap;
-    }
-    .vstable th:first-child { text-align: left; min-width: 130px; }
-    .vstable td {
-      padding: 7px 10px; text-align: center;
-      font-size: .8rem; border-bottom: 1px solid var(--border);
-    }
-    .vstable tr:last-child td { border-bottom: none; }
-    .vstable td:first-child { text-align: left; }
-    .vstable tbody tr:hover td { background: var(--surf2); }
-    .vs-rid  { font-size: .67rem; font-weight: 800; color: var(--accent); display:block; }
-    .vs-name { font-size: .7rem; color: var(--text2); }
-    .vs-cnt  { font-weight: 700; color: var(--text); }
-    .vs-cnt.zero { color: var(--text3); font-weight: 400; }
-    .vs-total { font-weight: 800; color: var(--accent); }
-    .reg-vcnt {
-      font-size: .62rem; font-weight: 700;
-      background: var(--accent-x); border: 1px solid var(--accent);
-      color: var(--accent); border-radius: 10px; padding: 1px 6px;
-      white-space: nowrap; display:inline-block; margin-top:3px;
-    }
-    .pcnt { font-size: .68rem; color: var(--text3); margin-top: 2px; }
-
-    @media (max-width: 900px) {
-      .main { grid-template-columns: 1fr; }
-      .sidebar { position: static; max-height: none; overflow-y: visible; }
-    }
-    @media (max-width: 500px) {
-      .hdr  { padding: 0 14px; }
-      .main { padding: 18px 12px 50px; }
-      .pgrid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
-      .mbody { padding: 14px; }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<header class="hdr">
-  <div class="hdr-brand">
-    <span class="hdr-icon">🦅</span>
-    <div>
-      <div class="hdr-name">Black Falconz</div>
-      <div class="hdr-sub">Bødekasse</div>
+  <header class="hdr">
+    <div class="hdr-brand">
+      <span class="hdr-icon">🦅</span>
+      <div>
+        <div class="hdr-name">Black Falconz</div>
+        <div class="hdr-sub">Bødekasse</div>
+      </div>
     </div>
-  </div>
-  <button class="btn btn-primary" onclick="openModal()">＋ Tilføj bøde</button>
-</header>
+    <button class="btn btn-primary" onclick="openModal()">＋ Tilføj bøde</button>
+  </header>
 
-<main class="main">
-  <div class="main-col">
-    <div class="sec">
-      <div class="sec-head">
-        <span class="sec-title">Spillere</span>
-        <span class="sec-meta" id="potLabel"></span>
+  <main class="main">
+    <div class="main-col">
+      <div class="sec">
+        <div class="sec-head">
+          <span class="sec-title">Spillere</span>
+          <span class="sec-meta" id="potLabel"></span>
+        </div>
+        <div class="pgrid" id="pgrid"></div>
       </div>
-      <div class="pgrid" id="pgrid"></div>
+
+      <div class="sec">
+        <div class="sec-head">
+          <span class="sec-title">Bødehistorik</span>
+          <div class="tabs" id="tabs"></div>
+        </div>
+        <button type="button" class="collapsible" onclick="historyDisplay(this)">Skjul historik</button>
+        <div class="htable" id="htable"></div>
+      </div>
+
+      <div class="sec">
+        <div class="sec-head">
+          <span class="sec-title">Overtrædelser pr. regel</span>
+        </div>
+        <div class="vstable" id="vstable"></div>
+      </div>
     </div>
 
-    <div class="sec">
-      <div class="sec-head">
-        <span class="sec-title">Bødehistorik</span>
-        <div class="tabs" id="tabs"></div>
+    <aside class="sidebar">
+      <div class="sec">
+        <div class="sec-head">
+          <span class="sec-title">Black Falconz-Reglementet</span>
+          <button class="btn btn-primary" style="padding:5px 10px;font-size:.75rem" onclick="openAddRuleModal()">＋
+            Regel</button>
+        </div>
+        <div id="regTable"></div>
       </div>
-      <div class="htable" id="htable"></div>
-    </div>
+    </aside>
+  </main>
 
-    <div class="sec">
-      <div class="sec-head">
-        <span class="sec-title">Overtrædelser pr. regel</span>
+  <div class="moverlay" id="moverlay" onclick="onOvClick(event)">
+    <div class="mdialog">
+      <div class="mhead">
+        <span class="mhead-title">Tilføj bøde</span>
+        <button class="mclose" onclick="closeModal()">&times;</button>
       </div>
-      <div class="vstable" id="vstable"></div>
-    </div>
-  </div>
-
-  <aside class="sidebar">
-    <div class="sec">
-      <div class="sec-head">
-        <span class="sec-title">Black Falconz-Reglementet</span>
-        <button class="btn btn-primary" style="padding:5px 10px;font-size:.75rem" onclick="openAddRuleModal()">＋ Regel</button>
-      </div>
-      <div id="regTable"></div>
-    </div>
-  </aside>
-</main>
-
-<div class="moverlay" id="moverlay" onclick="onOvClick(event)">
-  <div class="mdialog">
-    <div class="mhead">
-      <span class="mhead-title">Tilføj bøde</span>
-      <button class="mclose" onclick="closeModal()">&times;</button>
-    </div>
-    <div class="mbody" id="mbody"></div>
-    <div class="mfoot">
-      <div class="mtotal">Total: <strong id="mtotal">0 kr</strong></div>
-      <div style="display:flex;gap:8px">
-        <button class="btn btn-secondary" onclick="closeModal()">Annuller</button>
-        <button class="btn btn-primary" onclick="submitFine()">Tilføj bøde</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="moverlay" id="addRuleOverlay" onclick="onAddRuleOvClick(event)">
-  <div class="mdialog" style="max-width:420px">
-    <div class="mhead">
-      <span class="mhead-title">Tilføj ny regel</span>
-      <button class="mclose" onclick="closeAddRuleModal()">&times;</button>
-    </div>
-    <div class="mbody">
-      <div class="fg">
-        <label class="flabel">Paragraf-nummer</label>
-        <div id="newRuleId" style="font-size:.95rem;font-weight:800;color:var(--accent)"></div>
-      </div>
-      <div class="fg">
-        <label class="flabel">Beskrivelse</label>
-        <textarea class="fnote" id="newRuleDesc" placeholder="Beskriv reglen..."></textarea>
-      </div>
-      <div class="fg" style="margin-bottom:0">
-        <label class="flabel">Bødebeløb (kr)</label>
-        <input type="number" id="newRuleAmt" min="1" placeholder="f.eks. 10"
-          style="background:var(--surf2);border:1.5px solid var(--border);border-radius:var(--r-sm);color:var(--text);padding:9px 11px;font-size:.84rem;width:100%;outline:none;font-family:inherit">
-      </div>
-    </div>
-    <div class="mfoot">
-      <div></div>
-      <div style="display:flex;gap:8px">
-        <button class="btn btn-secondary" onclick="closeAddRuleModal()">Annuller</button>
-        <button class="btn btn-primary" onclick="submitNewRule()">Tilføj regel</button>
+      <div class="mbody" id="mbody"></div>
+      <div class="mfoot">
+        <div class="mtotal">Total: <strong id="mtotal">0 kr</strong></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-secondary" onclick="closeModal()">Annuller</button>
+          <button class="btn btn-primary" onclick="submitFine()">Tilføj bøde</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<script>
-// ── DATA ────────────────────────────────────────────────────────────────────
-const PLAYERS = ['Brille','Helev','Jay','KB9','Svede','Wush','Trulle'];
+  <div class="moverlay" id="addRuleOverlay" onclick="onAddRuleOvClick(event)">
+    <div class="mdialog" style="max-width:420px">
+      <div class="mhead">
+        <span class="mhead-title">Tilføj ny regel</span>
+        <button class="mclose" onclick="closeAddRuleModal()">&times;</button>
+      </div>
+      <div class="mbody">
+        <div class="fg">
+          <label class="flabel">Paragraf-nummer</label>
+          <div id="newRuleId" style="font-size:.95rem;font-weight:800;color:var(--accent)"></div>
+        </div>
+        <div class="fg">
+          <label class="flabel">Beskrivelse</label>
+          <textarea class="fnote" id="newRuleDesc" placeholder="Beskriv reglen..."></textarea>
+        </div>
+        <div class="fg" style="margin-bottom:0">
+          <label class="flabel">Bødebeløb (kr)</label>
+          <input type="number" id="newRuleAmt" min="1" placeholder="f.eks. 10"
+            style="background:var(--surf2);border:1.5px solid var(--border);border-radius:var(--r-sm);color:var(--text);padding:9px 11px;font-size:.84rem;width:100%;outline:none;font-family:inherit">
+        </div>
+      </div>
+      <div class="mfoot">
+        <div></div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-secondary" onclick="closeAddRuleModal()">Annuller</button>
+          <button class="btn btn-primary" onclick="submitNewRule()">Tilføj regel</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-const RULES = [
-  {
-    id:'§ 1a', title:'Håbløst skill-run',
-    full:'Håbløst skill-run', amt:5
-  },
-  {
-    id:'§ 1b', title:'Håbløst skill-run (ingen reel finte)',
-    full:'Håbløst skill-run, hvor man ikke formår at lave en eneste reel finte', amt:10
-  },
-  {
-    id:'§ 2', title:'To mand alene med keeperen – ingen scoring',
-    full:'To mand alene med keeperen, der ikke ender i scoring. Kun bøde til den første i besiddelse af bolden i straffesparksfeltet.', amt:5
-  },
-  {
-    id:'§ 3', title:'Brændt frit mål',
-    full:'Brænde frit mål, altså ingen keeper', amt:5
-  },
-  {
-    id:'§ 4a', title:'Mere end 15 min for sent',
-    full:'Melde et præcist tidspunkt og komme mere end 15 minutter for sent', amt:5
-  },
-  {
-    id:'§ 4b', title:'Mere end 30 min for sent',
-    full:'Mere end 30 minutter for sent (se § 4a)', amt:10
-  },
-  {
-    id:'§ 5', title:'Stjæle frispark/straffespark',
-    full:'Stjæle en anden persons frispark eller straffespark. Ingen bøde ved mundtlig accept.', amt:5
-  },
-  {
-    id:'§ 6', title:"AFK – any'en overtager ens pro",
-    full:"AFK så lang tid, at any'en overtager éns pro", amt:10,
-    sub:'+10 kr oveni, hvis man ryger helt ud af kampen',
-    extra:{ type:'check', label:'Ryger helt ud af kampen (+10 kr)', bonus:10 }
-  },
-  {
-    id:'§ 7', title:'Brændt straffespark',
-    full:'Brændt straffespark', amt:5
-  },
-  {
-    id:'§ 8', title:'15+ possession lost i én kamp',
-    full:'Have 15 eller flere "possession lost" i én kamp', amt:5
-  },
-  {
-    id:'§ KB9', title:'Rødt kort inden minut 70',
-    full:"At modtage et rødt kort inden minut 70. Ingen bøde for røde kort til CPU's.", amt:10,
-    sub:'Rødt kort i første halvlegs tillægstid: +5 kr',
-    extra:{ type:'check', label:'Rødt kort i 1. halvlegs tillægstid (+5 kr)', bonus:5 }
-  },
-  {
-    id:'§ 10', title:'4+ offsides i én kamp',
-    full:'Blive dømt offside fire gange eller mere i én kamp', amt:5
-  },
-  {
-    id:'§ 11', title:'Miste bold på egen halvdel pga. skill-moves',
-    full:"Miste bolden pga. skill-moves på egen banehalvdel, som ender med scoring til modstanderholdet. Gælder ikke CPU's.", amt:5
-  },
-  {
-    id:'§ 12', title:'Åbenlyst forkert build',
-    full:'Spiller med åbenlyst forkert build. F.eks. RWB i offensiven eller RW som forsvarsspiller.', amt:5
-  },
-  {
-    id:'§ 13', title:'Griddy-jubel (uprovokeret)',
-    full:'Udføre griddy-jubelscenen uprovokeret. Dispensation, hvis modstanderen selv har lavet en griddy eller spiller som rotter.', amt:10,
-    sub:'Annulleres, hvis modstanderen quitter kampen inden at have givet bolden op'
-  },
-  {
-    id:'§ 14a', title:'Nummer 69 på ryggen',
-    full:'Spiller med nummer 69 på ryggen', amt:30
-  },
-  {
-    id:'§ 14b', title:'Nummer 1 på ryggen (ikke MV)',
-    full:'Spiller med nummer 1 på ryggen. Gælder ikke for målmænd.', amt:30
-  },
-  {
-    id:'§ 15', title:'Underpræstere xG med 1,5+',
-    full:'Underpræstere sin xG med 1,5 eller mere. Straffespark tæller ikke med i xG-regnskabet.', amt:10,
-    sub:'For hver 1,0 xG, som man underpræsterer med, modtages 5 kr ekstra i bøde',
-    extra:{ type:'xg', label:'xG-underpræstation (skal være ≥ 1,5)', placeholder:'f.eks. 2,5', threshold:1.5 }
-  },
-  {
-    id:'§ 16', title:'Trulle-bøden – indkast til modstander',
-    full:'Indkast direkte til modstander eller ud af banen, selvom man har helt fri medspillere', amt:2
-  },
-  {
-    id:'§ 17', title:'Sige noget pænt om SamTapTap',
-    full:'Sige noget pænt om SamTapTap', amt:50
-  },
-  {
-    id:'§ 18', title:'Helev-bøden – 14 dage uden kamp',
-    full:'Ikke at spille en kamp i 14 dage eller mere. Ingen bøde, hvis ingen spiller i 14 dage.', amt:30
-  },
-  {
-    id:'§ 19', title:'Aflevere ved kick-off for tidligt',
-    full:"Aflevere bolden ved kick-off, før any'en har lavet taktik, hvis det ønskes af any'en", amt:5
-  },
-  {
-    id:'§ 20', title:'Diverse',
-    full:'Diverse – afgøres af de online medlemmer', amt:null,
-    extra:{ type:'custom', label:'Beløb (1–50 kr)', placeholder:'10', min:1, max:50 }
-  },
-  {
-    id:'§ 21', title:'Laveste bødesaldo',
-    full:'Bøde for at have den laveste samlede bødesaldo, når der skal betales bøder', amt:50
-  },
-  {
-    id:'§ 22', title:'Bold ud til indkast på skud-input',
-    full:'Sparke bolden ud direkte til indkast på et skud-input', amt:15
-  },
-  {
-    id:'§ 23', title:'Målmandsbøde – mål over xG',
-    full:'Bøde til målmanden, hvis modstanderens antal mål er minimum 1 over modstanderens xG.', amt:10,
-    sub:'For hver 1,0 xG, som man underpræsterer med, modtages 5 kr ekstra i bøde',
-    extra:{ type:'xg', label:'Antal mål over modstanderens xG (skal være ≥ 1)', placeholder:'f.eks. 2', threshold:1 }
-  }
-];
+  <script>
+    // ── DATA ────────────────────────────────────────────────────────────────────
+    const PLAYERS = ['Brille', 'Helev', 'Jay', 'KB9', 'Svede', 'Wush', 'Trulle', 'Mark'
+    ];
 
-// ── SEED DATA (from spreadsheet) ─────────────────────────────────────────────
-// Rule IDs: §9 in spreadsheet = §KB9 in code; §3a = §3; 14a = §14a
-const SEED = [
-  { player:'Brille', v:{'§ 1a':1,'§ 2':7,'§ 3':1,'§ 4a':1,'§ 6':3,'§ 7':4,'§ KB9':9,'§ 11':1,'§ 13':13,'§ 14a':2,'§ 15':6,'§ 16':2,'§ 19':2,'§ 20':2} },
-  { player:'Helev',  v:{'§ 1a':1,'§ 2':1,'§ 13':2,'§ 16':1,'§ 18':1,'§ 19':1} },
-  { player:'Jay',    v:{'§ 1a':2,'§ 2':3,'§ 4a':1,'§ 4b':1,'§ KB9':2,'§ 13':3,'§ 15':6,'§ 19':2,'§ 20':2,'§ 22':1} },
-  { player:'KB9',    v:{'§ 2':2,'§ 3':1,'§ KB9':12,'§ 13':10,'§ 15':6,'§ 16':1,'§ 19':4,'§ 20':1,'§ 22':2} },
-  { player:'Svede',  v:{'§ 1a':1,'§ 2':3,'§ 3':1,'§ 7':4,'§ 8':1,'§ KB9':5,'§ 11':1,'§ 13':2,'§ 15':4,'§ 16':1,'§ 22':2} },
-  { player:'Wush',   v:{'§ 1a':1,'§ 2':2,'§ 3':1,'§ 6':1,'§ KB9':2,'§ 11':1,'§ 13':5,'§ 15':4,'§ 16':1,'§ 20':2} },
-  { player:'Trulle', v:{'§ 7':2,'§ KB9':1,'§ 20':1} }
-];
-
-// ── STATE ────────────────────────────────────────────────────────────────────
-let fines       = JSON.parse(localStorage.getItem('bf_fines')        || '[]');
-let customRules = JSON.parse(localStorage.getItem('bf_custom_rules') || '[]');
-let filter   = 'all';
-let selPl    = null;
-let selRules = new Set();
-
-function save()            { localStorage.setItem('bf_fines',        JSON.stringify(fines)); }
-function saveCustomRules() { localStorage.setItem('bf_custom_rules', JSON.stringify(customRules)); }
-function getAllRules()      { return [...RULES, ...customRules]; }
-function uid()  { return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
-
-function seedIfEmpty() {
-  if (fines.length > 0) return;
-  const now = Date.now();
-  const SIX_MO = 180 * 24 * 3600 * 1000;
-  let ts = now - SIX_MO;
-  const step = Math.floor(SIX_MO / 130);
-  const all = getAllRules();
-  SEED.forEach(({ player, v }) => {
-    Object.entries(v).forEach(([ruleId, count]) => {
-      const rule = all.find(r => r.id === ruleId);
-      const amt = rule ? (rule.amt ?? 10) : 10;
-      for (let i = 0; i < count; i++) {
-        ts += step + Math.floor(Math.random() * step * 0.6);
-        fines.push({ id: uid(), player, rules: [{ id: ruleId, amt, note: '' }], amt, note: '', ts });
+    const RULES = [
+      {
+        id: '§ 1a', title: 'Håbløst skill-run',
+        full: 'Håbløst skill-run', amt: 5
+      },
+      {
+        id: '§ 1b', title: 'Håbløst skill-run (ingen reel finte)',
+        full: 'Håbløst skill-run, hvor man ikke formår at lave en eneste reel finte', amt: 10
+      },
+      {
+        id: '§ 2', title: 'To mand alene med keeperen – ingen scoring',
+        full: 'To mand alene med keeperen, der ikke ender i scoring. Kun bøde til den første i besiddelse af bolden i straffesparksfeltet.', amt: 5
+      },
+      {
+        id: '§ 3', title: 'Brændt frit mål',
+        full: 'Brænde frit mål, altså ingen keeper', amt: 5
+      },
+      {
+        id: '§ 4a', title: 'Mere end 15 min for sent',
+        full: 'Melde et præcist tidspunkt og komme mere end 15 minutter for sent', amt: 5
+      },
+      {
+        id: '§ 4b', title: 'Mere end 30 min for sent',
+        full: 'Mere end 30 minutter for sent (se § 4a)', amt: 10
+      },
+      {
+        id: '§ 5', title: 'Stjæle frispark/straffespark',
+        full: 'Stjæle en anden persons frispark eller straffespark. Ingen bøde ved mundtlig accept.', amt: 5
+      },
+      {
+        id: '§ 6', title: "AFK – any'en overtager ens pro",
+        full: "AFK så lang tid, at any'en overtager éns pro", amt: 10,
+        sub: '+10 kr oveni, hvis man ryger helt ud af kampen',
+        extra: { type: 'check', label: 'Ryger helt ud af kampen (+10 kr)', bonus: 10 }
+      },
+      {
+        id: '§ 7', title: 'Brændt straffespark',
+        full: 'Brændt straffespark', amt: 5
+      },
+      {
+        id: '§ 8', title: '15+ possession lost i én kamp',
+        full: 'Have 15 eller flere "possession lost" i én kamp', amt: 5
+      },
+      {
+        id: '§ KB9', title: 'Rødt kort inden minut 70',
+        full: "At modtage et rødt kort inden minut 70. Ingen bøde for røde kort til CPU's.", amt: 10,
+        sub: 'Rødt kort i første halvlegs tillægstid: +5 kr',
+        extra: { type: 'check', label: 'Rødt kort i 1. halvlegs tillægstid (+5 kr)', bonus: 5 }
+      },
+      {
+        id: '§ 10', title: '4+ offsides i én kamp',
+        full: 'Blive dømt offside fire gange eller mere i én kamp', amt: 5
+      },
+      {
+        id: '§ 11', title: 'Miste bold på egen halvdel pga. skill-moves',
+        full: "Miste bolden pga. skill-moves på egen banehalvdel, som ender med scoring til modstanderholdet. Gælder ikke CPU's.", amt: 5
+      },
+      {
+        id: '§ 12', title: 'Åbenlyst forkert build',
+        full: 'Spiller med åbenlyst forkert build. F.eks. RWB i offensiven eller RW som forsvarsspiller.', amt: 5
+      },
+      {
+        id: '§ 13', title: 'Griddy-jubel (uprovokeret)',
+        full: 'Udføre griddy-jubelscenen uprovokeret. Dispensation, hvis modstanderen selv har lavet en griddy eller spiller som rotter.', amt: 10,
+        sub: 'Annulleres, hvis modstanderen quitter kampen inden at have givet bolden op'
+      },
+      {
+        id: '§ 14a', title: 'Nummer 69 på ryggen',
+        full: 'Spiller med nummer 69 på ryggen', amt: 30
+      },
+      {
+        id: '§ 14b', title: 'Nummer 1 på ryggen (ikke MV)',
+        full: 'Spiller med nummer 1 på ryggen. Gælder ikke for målmænd.', amt: 30
+      },
+      {
+        id: '§ 15', title: 'Underpræstere xG med 1,5+',
+        full: 'Underpræstere sin xG med 1,5 eller mere. Straffespark tæller ikke med i xG-regnskabet.', amt: 10,
+        sub: 'For hver 1,0 xG, som man underpræsterer med, modtages 5 kr ekstra i bøde',
+        extra: { type: 'xg', label: 'xG-underpræstation (skal være ≥ 1,5)', placeholder: 'f.eks. 2,5', threshold: 1.5 }
+      },
+      {
+        id: '§ 16', title: 'Trulle-bøden – indkast til modstander',
+        full: 'Indkast direkte til modstander eller ud af banen, selvom man har helt fri medspillere', amt: 2
+      },
+      {
+        id: '§ 17', title: 'Sige noget pænt om SamTapTap',
+        full: 'Sige noget pænt om SamTapTap', amt: 50
+      },
+      {
+        id: '§ 18', title: 'Helev-bøden – 14 dage uden kamp',
+        full: 'Ikke at spille en kamp i 14 dage eller mere. Ingen bøde, hvis ingen spiller i 14 dage.', amt: 30
+      },
+      {
+        id: '§ 19', title: 'Aflevere ved kick-off for tidligt',
+        full: "Aflevere bolden ved kick-off, før any'en har lavet taktik, hvis det ønskes af any'en", amt: 5
+      },
+      {
+        id: '§ 20', title: 'Diverse',
+        full: 'Diverse – afgøres af de online medlemmer', amt: null,
+        extra: { type: 'custom', label: 'Beløb (1–50 kr)', placeholder: '10', min: 1, max: 50 }
+      },
+      {
+        id: '§ 21', title: 'Laveste bødesaldo',
+        full: 'Bøde for at have den laveste samlede bødesaldo, når der skal betales bøder', amt: 50
+      },
+      {
+        id: '§ 22', title: 'Bold ud til indkast på skud-input',
+        full: 'Sparke bolden ud direkte til indkast på et skud-input', amt: 15
+      },
+      {
+        id: '§ 23', title: 'Målmandsbøde – mål over xG',
+        full: 'Bøde til målmanden, hvis modstanderens antal mål er minimum 1 over modstanderens xG.', amt: 10,
+        sub: 'For hver 1,0 xG, som man underpræsterer med, modtages 5 kr ekstra i bøde',
+        extra: { type: 'xg', label: 'Antal mål over modstanderens xG (skal være ≥ 1)', placeholder: 'f.eks. 2', threshold: 1 }
       }
-    });
-  });
-  fines.sort((a, b) => a.ts - b.ts);
-  save();
-}
+    ];
 
-// ── VIOLATION COUNT HELPERS ──────────────────────────────────────────────────
-function totalRuleViolations(ruleId) {
-  return fines.reduce((s, f) => s + f.rules.filter(r => r.id === ruleId).length, 0);
-}
-function ruleViolationsByPlayer(ruleId) {
-  const counts = {};
-  PLAYERS.forEach(p => { counts[p] = 0; });
-  fines.forEach(f => f.rules.forEach(r => {
-    if (r.id === ruleId) counts[f.player] = (counts[f.player] || 0) + 1;
-  }));
-  return counts;
-}
-function playerTotalViolations(player) {
-  return fines.filter(f => f.player === player).reduce((s, f) => s + f.rules.length, 0);
-}
+    // ── SEED DATA (from spreadsheet) ─────────────────────────────────────────────
+    // Rule IDs: §9 in spreadsheet = §KB9 in code; §3a = §3; 14a = §14a
+    const SEED = [
+      { player: 'Brille', v: { '§ 1a': 1, '§ 2': 7, '§ 3': 1, '§ 4a': 1, '§ 6': 3, '§ 7': 4, '§ KB9': 9, '§ 11': 1, '§ 13': 13, '§ 14a': 2, '§ 15': 6, '§ 16': 2, '§ 19': 2, '§ 20': 2 } },
+      { player: 'Helev', v: { '§ 1a': 1, '§ 2': 1, '§ 13': 2, '§ 16': 1, '§ 18': 1, '§ 19': 1 } },
+      { player: 'Jay', v: { '§ 1a': 2, '§ 2': 3, '§ 4a': 1, '§ 4b': 1, '§ KB9': 2, '§ 13': 3, '§ 15': 6, '§ 19': 2, '§ 20': 2, '§ 22': 1 } },
+      { player: 'KB9', v: { '§ 2': 2, '§ 3': 1, '§ KB9': 12, '§ 13': 10, '§ 15': 6, '§ 16': 1, '§ 19': 4, '§ 20': 1, '§ 22': 2 } },
+      { player: 'Svede', v: { '§ 1a': 1, '§ 2': 3, '§ 3': 1, '§ 7': 4, '§ 8': 1, '§ KB9': 5, '§ 11': 1, '§ 13': 2, '§ 15': 4, '§ 16': 1, '§ 22': 2 } },
+      { player: 'Wush', v: { '§ 1a': 1, '§ 2': 2, '§ 3': 1, '§ 6': 1, '§ KB9': 2, '§ 11': 1, '§ 13': 5, '§ 15': 4, '§ 16': 1, '§ 20': 2 } },
+      { player: 'Trulle', v: { '§ 7': 2, '§ KB9': 1, '§ 20': 1 } },
+      { player: 'Mark', v: { '§ 7': 2 } }
+    ];
 
-function fmtDate(ts) {
-  const d = new Date(ts);
-  return d.toLocaleDateString('da-DK', {day:'2-digit',month:'2-digit',year:'numeric'})
-       + ' ' + d.toLocaleTimeString('da-DK', {hour:'2-digit',minute:'2-digit'});
-}
+    // ── STATE ────────────────────────────────────────────────────────────────────
+    let fines = JSON.parse(localStorage.getItem('bf_fines') || '[]');
+    let customRules = JSON.parse(localStorage.getItem('bf_custom_rules') || '[]');
+    let filter = 'all';
+    let selPl = null;
+    let selRules = new Set();
 
-// safe DOM id key for a rule
-function rk(rule) { return 'r_' + rule.id.replace(/\W/g,'_'); }
+    function save() { localStorage.setItem('bf_fines', JSON.stringify(fines)); }
+    function saveCustomRules() { localStorage.setItem('bf_custom_rules', JSON.stringify(customRules)); }
+    function getAllRules() { return [...RULES, ...customRules]; }
+    function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
 
-// ── AMOUNT CALCULATION ───────────────────────────────────────────────────────
-function ruleAmt(rule) {
-  let base = rule.amt || 0;
-  if (!rule.extra) return base;
-  const el = document.getElementById('x_' + rk(rule));
-  if (!el) return base;
-  const { type, bonus, threshold, min, max } = rule.extra;
-  if (type === 'check') {
-    return base + (el.checked ? (bonus || 0) : 0);
-  }
-  if (type === 'xg') {
-    const v = parseFloat(el.value);
-    if (isNaN(v) || v < threshold) return base;
-    return base + Math.floor(v - threshold) * 5;
-  }
-  if (type === 'custom') {
-    const v = parseInt(el.value);
-    if (isNaN(v) || v < 1) return 0;
-    return Math.max(min || 1, Math.min(max || 50, v));
-  }
-  return base;
-}
+    function seedIfEmpty() {
+      if (fines.length > 0) return;
+      const now = Date.now();
+      const SIX_MO = 180 * 24 * 3600 * 1000;
+      let ts = now - SIX_MO;
+      const step = Math.floor(SIX_MO / 130);
+      const all = getAllRules();
+      SEED.forEach(({ player, v }) => {
+        Object.entries(v).forEach(([ruleId, count]) => {
+          const rule = all.find(r => r.id === ruleId);
+          const amt = rule ? (rule.amt ?? 10) : 10;
+          for (let i = 0; i < count; i++) {
+            ts += step + Math.floor(Math.random() * step * 0.6);
+            fines.push({ id: uid(), player, rules: [{ id: ruleId, amt, note: '' }], amt, note: '', ts });
+          }
+        });
+      });
+      fines.sort((a, b) => a.ts - b.ts);
+      save();
+    }
 
-// ── TOTALS ───────────────────────────────────────────────────────────────────
-function pTotal(p) { return fines.filter(f => f.player === p).reduce((s,f) => s + f.amt, 0); }
-function allTotal() { return fines.reduce((s,f) => s + f.amt, 0); }
+    // ── VIOLATION COUNT HELPERS ──────────────────────────────────────────────────
+    function totalRuleViolations(ruleId) {
+      return fines.reduce((s, f) => s + f.rules.filter(r => r.id === ruleId).length, 0);
+    }
+    function ruleViolationsByPlayer(ruleId) {
+      const counts = {};
+      PLAYERS.forEach(p => { counts[p] = 0; });
+      fines.forEach(f => f.rules.forEach(r => {
+        if (r.id === ruleId) counts[f.player] = (counts[f.player] || 0) + 1;
+      }));
+      return counts;
+    }
+    function playerTotalViolations(player) {
+      return fines.filter(f => f.player === player).reduce((s, f) => s + f.rules.length, 0);
+    }
 
-// ── RENDER MAIN ──────────────────────────────────────────────────────────────
-function renderAll() {
-  renderGrid();
-  renderTabs();
-  renderHistory();
-  renderSidebar();
-  renderViolationStats();
-  const t = allTotal();
-  document.getElementById('potLabel').textContent = t ? `Samlet pulje: ${t} kr` : '';
-}
+    function fmtDate(ts) {
+      const d = new Date(ts);
+      return d.toLocaleDateString('da-DK', { day: '2-digit', month: '2-digit', year: 'numeric' })
+        + ' ' + d.toLocaleTimeString('da-DK', { hour: '2-digit', minute: '2-digit' });
+    }
 
-function renderSidebar() {
-  const all = getAllRules();
-  document.getElementById('regTable').innerHTML = `<div class="reg-table">${
-    all.map((r, i) => {
-      const amtLabel = r.amt !== null ? `${r.amt} kr` : '1–50 kr';
-      const isCustom = !!r.custom;
-      const customIdx = isCustom ? customRules.indexOf(r) : -1;
-      const vcnt = totalRuleViolations(r.id);
-      return `<div class="reg-row">
+    // safe DOM id key for a rule
+    function rk(rule) { return 'r_' + rule.id.replace(/\W/g, '_'); }
+
+    // ── AMOUNT CALCULATION ───────────────────────────────────────────────────────
+    function ruleAmt(rule) {
+      let base = rule.amt || 0;
+      if (!rule.extra) return base;
+      const el = document.getElementById('x_' + rk(rule));
+      if (!el) return base;
+      const { type, bonus, threshold, min, max } = rule.extra;
+      if (type === 'check') {
+        return base + (el.checked ? (bonus || 0) : 0);
+      }
+      if (type === 'xg') {
+        const v = parseFloat(el.value);
+        if (isNaN(v) || v < threshold) return base;
+        return base + Math.floor(v - threshold) * 5;
+      }
+      if (type === 'custom') {
+        const v = parseInt(el.value);
+        if (isNaN(v) || v < 1) return 0;
+        return Math.max(min || 1, Math.min(max || 50, v));
+      }
+      return base;
+    }
+
+    // ── TOTALS ───────────────────────────────────────────────────────────────────
+    function pTotal(p) { return fines.filter(f => f.player === p).reduce((s, f) => s + f.amt, 0); }
+    function allTotal() { return fines.reduce((s, f) => s + f.amt, 0); }
+
+    // ── RENDER MAIN ──────────────────────────────────────────────────────────────
+    function renderAll() {
+      renderGrid();
+      renderTabs();
+      renderHistory();
+      renderSidebar();
+      renderViolationStats();
+      const t = allTotal();
+      document.getElementById('potLabel').textContent = t ? `Samlet pulje: ${t} kr` : '';
+    }
+
+    function renderSidebar() {
+      const all = getAllRules();
+      document.getElementById('regTable').innerHTML = `<div class="reg-table">${all.map((r, i) => {
+        const amtLabel = r.amt !== null ? `${r.amt} kr` : '1–50 kr';
+        const isCustom = !!r.custom;
+        const customIdx = isCustom ? customRules.indexOf(r) : -1;
+        const vcnt = totalRuleViolations(r.id);
+        return `<div class="reg-row">
         <div>
           <span class="reg-id">bfr ${r.id}</span>
           ${vcnt ? `<span class="reg-vcnt">×${vcnt}</span>` : ''}
@@ -705,52 +360,52 @@ function renderSidebar() {
           ${isCustom ? `<button class="reg-del" onclick="deleteCustomRule(${customIdx})" title="Slet regel">✕</button>` : ''}
         </div>
       </div>`;
-    }).join('')
-  }</div>`;
-}
+      }).join('')
+        }</div>`;
+    }
 
-function renderGrid() {
-  document.getElementById('pgrid').innerHTML = PLAYERS.map(p => {
-    const tot = pTotal(p);
-    const viol = playerTotalViolations(p);
-    return `<div class="pcard" onclick="openModal('${p}')">
-      <div class="pavatar">${p.slice(0,2).toUpperCase()}</div>
+    function renderGrid() {
+      document.getElementById('pgrid').innerHTML = PLAYERS.map(p => {
+        const tot = pTotal(p);
+        const viol = playerTotalViolations(p);
+        return `<div class="pcard" onclick="openModal('${p}')">
+      <div class="pavatar">${p.slice(0, 2).toUpperCase()}</div>
       <div class="pname">${p}</div>
       <div class="pamount">${tot}</div>
       <div class="plabel">kr i bøder</div>
       ${viol ? `<div class="pcnt">${viol} overtr.</div>` : ''}
     </div>`;
-  }).join('');
-}
+      }).join('');
+    }
 
-function renderTabs() {
-  document.getElementById('tabs').innerHTML =
-    `<button class="tab${filter==='all'?' act':''}" onclick="setFilter('all')">Alle</button>` +
-    PLAYERS.map(p =>
-      `<button class="tab${filter===p?' act':''}" onclick="setFilter('${p}')">${p}</button>`
-    ).join('');
-}
+    function renderTabs() {
+      document.getElementById('tabs').innerHTML =
+        `<button class="tab${filter === 'all' ? ' act' : ''}" onclick="setFilter('all')">Alle</button>` +
+        PLAYERS.map(p =>
+          `<button class="tab${filter === p ? ' act' : ''}" onclick="setFilter('${p}')">${p}</button>`
+        ).join('');
+    }
 
-function setFilter(p) { filter = p; renderTabs(); renderHistory(); }
+    function setFilter(p) { filter = p; renderTabs(); renderHistory(); }
 
-function renderHistory() {
-  const el = document.getElementById('htable');
-  const list = (filter === 'all' ? fines : fines.filter(f => f.player === filter))
-    .slice().sort((a,b) => b.ts - a.ts);
+    function renderHistory() {
+      const el = document.getElementById('htable');
+      const list = (filter === 'all' ? fines : fines.filter(f => f.player === filter))
+        .slice().sort((a, b) => b.ts - a.ts);
 
-  if (!list.length) {
-    el.innerHTML = `<div class="hempty">Ingen bøder${filter !== 'all' ? ` for ${filter}` : ''} endnu</div>`;
-    return;
-  }
+      if (!list.length) {
+        el.innerHTML = `<div class="hempty">Ingen bøder${filter !== 'all' ? ` for ${filter}` : ''} endnu</div>`;
+        return;
+      }
 
-  el.innerHTML = list.map(f => `
+      el.innerHTML = list.map(f => `
     <div class="hrow">
       <div class="hrow-player">${f.player}</div>
       <div class="hrow-content">
         <div class="hrow-tags">
           ${f.rules.map(r =>
-            `<span class="htag"><span class="htag-id">${r.id}</span>${r.amt} kr${r.note ? ` · ${r.note}` : ''}</span>`
-          ).join('')}
+        `<span class="htag"><span class="htag-id">${r.id}</span> - ${r.amt} kr${r.note ? ` · ${r.note}` : ''}</span>`
+      ).join('')}
         </div>
         ${f.note ? `<div class="hrow-note">${f.note}</div>` : ''}
       </div>
@@ -759,41 +414,41 @@ function renderHistory() {
       </div>
       <button class="btn-icon" onclick="delFine('${f.id}')" title="Slet bøde">🗑</button>
     </div>`
-  ).join('');
-}
+      ).join('');
+    }
 
-function delFine(id) {
-  if (!confirm('Slet denne bøde?')) return;
-  fines = fines.filter(f => f.id !== id);
-  save();
-  renderAll();
-}
+    function delFine(id) {
+      if (!confirm('Slet denne bøde?')) return;
+      fines = fines.filter(f => f.id !== id);
+      save();
+      renderAll();
+    }
 
-// ── MODAL ────────────────────────────────────────────────────────────────────
-function openModal(p = null) {
-  selPl = p;
-  selRules = new Set();
-  renderModal();
-  calcTotal();
-  document.getElementById('moverlay').classList.add('open');
-}
+    // ── MODAL ────────────────────────────────────────────────────────────────────
+    function openModal(p = null) {
+      selPl = p;
+      selRules = new Set();
+      renderModal();
+      calcTotal();
+      document.getElementById('moverlay').classList.add('open');
+    }
 
-function closeModal() {
-  document.getElementById('moverlay').classList.remove('open');
-  selPl = null;
-  selRules = new Set();
-}
+    function closeModal() {
+      document.getElementById('moverlay').classList.remove('open');
+      selPl = null;
+      selRules = new Set();
+    }
 
-function onOvClick(e) { if (e.target.id === 'moverlay') closeModal(); }
+    function onOvClick(e) { if (e.target.id === 'moverlay') closeModal(); }
 
-function renderModal() {
-  document.getElementById('mbody').innerHTML = `
+    function renderModal() {
+      document.getElementById('mbody').innerHTML = `
     <div class="fg">
       <label class="flabel">Spiller</label>
       <div class="chips" id="chips">
         ${PLAYERS.map(p =>
-          `<div class="chip${selPl===p?' sel':''}" onclick="pickPl('${p}')">${p}</div>`
-        ).join('')}
+        `<div class="chip${selPl === p ? ' sel' : ''}" onclick="pickPl('${p}')">${p}</div>`
+      ).join('')}
       </div>
     </div>
     <div class="fg">
@@ -804,41 +459,41 @@ function renderModal() {
       <label class="flabel">Note (valgfri)</label>
       <textarea class="fnote" id="fnote" placeholder="Tilføj en note til bøden..."></textarea>
     </div>`;
-}
+    }
 
-function renderRuleRow(rule) {
-  const k   = rk(rule);
-  const sel = selRules.has(rule.id);
-  const amtLabel = rule.amt !== null ? `${rule.amt} kr` : 'var.';
-  let extraHtml = '';
+    function renderRuleRow(rule) {
+      const k = rk(rule);
+      const sel = selRules.has(rule.id);
+      const amtLabel = rule.amt !== null ? `${rule.amt} kr` : 'var.';
+      let extraHtml = '';
 
-  if (rule.extra) {
-    const { type, label, placeholder, bonus, min, max, threshold } = rule.extra;
-    if (type === 'check') {
-      extraHtml = `<div class="rextra">
+      if (rule.extra) {
+        const { type, label, placeholder, bonus, min, max, threshold } = rule.extra;
+        if (type === 'check') {
+          extraHtml = `<div class="rextra">
         <label class="rextra-check" onclick="event.stopPropagation()">
           <input type="checkbox" id="x_${k}" onchange="calcTotal()"> ${label}
         </label>
       </div>`;
-    } else if (type === 'xg') {
-      extraHtml = `<div class="rextra">
+        } else if (type === 'xg') {
+          extraHtml = `<div class="rextra">
         <label class="rextra-lbl">${label}</label>
         <input type="number" id="x_${k}" min="0" step="0.1" placeholder="${placeholder}"
                onclick="event.stopPropagation()"
                oninput="xgHint('${k}',${threshold}); calcTotal()">
         <div class="rextra-hint" id="h_${k}"></div>
       </div>`;
-    } else if (type === 'custom') {
-      extraHtml = `<div class="rextra">
+        } else if (type === 'custom') {
+          extraHtml = `<div class="rextra">
         <label class="rextra-lbl">${label}</label>
-        <input type="number" id="x_${k}" min="${min||1}" max="${max||50}" placeholder="${placeholder||10}"
+        <input type="number" id="x_${k}" min="${min || 1}" max="${max || 50}" placeholder="${placeholder || 10}"
                onclick="event.stopPropagation()" oninput="calcTotal()">
       </div>`;
-    }
-  }
+        }
+      }
 
-  return `
-    <div class="rrow${sel?' sel':''}" id="rr_${k}" onclick="toggleRule('${rule.id}')">
+      return `
+    <div class="rrow${sel ? ' sel' : ''}" id="rr_${k}" onclick="toggleRule('${rule.id}')">
       <div class="rrow-top">
         <span class="rrow-id">${rule.id}</span>
         <div class="rrow-texts">
@@ -849,138 +504,138 @@ function renderRuleRow(rule) {
       </div>
       ${extraHtml}
     </div>`;
-}
-
-function xgHint(k, threshold) {
-  const el   = document.getElementById('x_' + k);
-  const hint = document.getElementById('h_' + k);
-  if (!el || !hint) return;
-  const v = parseFloat(el.value);
-  if (isNaN(v) || v < threshold) { hint.textContent = ''; return; }
-  const extra = Math.floor(v - threshold) * 5;
-  hint.textContent = extra > 0
-    ? `= 10 kr base + ${extra} kr ekstra (${Math.floor(v - threshold)}×5 kr) = ${10 + extra} kr`
-    : '= 10 kr';
-}
-
-function pickPl(p) {
-  selPl = p;
-  document.querySelectorAll('#chips .chip').forEach(el =>
-    el.classList.toggle('sel', el.textContent.trim() === p)
-  );
-}
-
-function toggleRule(id) {
-  const rule = getAllRules().find(r => r.id === id);
-  if (!rule) return;
-  const k  = rk(rule);
-  const el = document.getElementById('rr_' + k);
-  if (selRules.has(id)) { selRules.delete(id); el.classList.remove('sel'); }
-  else                  { selRules.add(id);    el.classList.add('sel');    }
-  calcTotal();
-}
-
-function calcTotal() {
-  let t = 0;
-  selRules.forEach(id => {
-    const rule = RULES.find(r => r.id === id);
-    if (rule) t += ruleAmt(rule);
-  });
-  document.getElementById('mtotal').textContent = t + ' kr';
-}
-
-// ── SUBMIT ───────────────────────────────────────────────────────────────────
-function submitFine() {
-  if (!selPl)         { alert('Vælg en spiller.');      return; }
-  if (!selRules.size) { alert('Vælg mindst én regel.'); return; }
-
-  const rules = [];
-  let total   = 0;
-
-  selRules.forEach(id => {
-    const rule = getAllRules().find(r => r.id === id);
-    if (!rule) return;
-    const a = ruleAmt(rule);
-    const k = rk(rule);
-    let note = '';
-    if (rule.extra) {
-      const el = document.getElementById('x_' + k);
-      if      (rule.extra.type === 'check'  && el?.checked)  note = rule.extra.label.replace(/ \(\+\d+ kr\)$/, '');
-      else if (rule.extra.type === 'xg'     && el?.value)    note = 'xG: ' + el.value;
-      else if (rule.extra.type === 'custom' && el?.value)    note = el.value + ' kr';
     }
-    rules.push({ id, amt: a, note });
-    total += a;
-  });
 
-  fines.push({
-    id:     uid(),
-    player: selPl,
-    rules,
-    amt:    total,
-    note:   document.getElementById('fnote')?.value?.trim() || '',
-    ts:     Date.now()
-  });
+    function xgHint(k, threshold) {
+      const el = document.getElementById('x_' + k);
+      const hint = document.getElementById('h_' + k);
+      if (!el || !hint) return;
+      const v = parseFloat(el.value);
+      if (isNaN(v) || v < threshold) { hint.textContent = ''; return; }
+      const extra = Math.floor(v - threshold) * 5;
+      hint.textContent = extra > 0
+        ? `= 10 kr base + ${extra} kr ekstra (${Math.floor(v - threshold)}×5 kr) = ${10 + extra} kr`
+        : '= 10 kr';
+    }
 
-  save();
-  closeModal();
-  renderAll();
-}
+    function pickPl(p) {
+      selPl = p;
+      document.querySelectorAll('#chips .chip').forEach(el =>
+        el.classList.toggle('sel', el.textContent.trim() === p)
+      );
+    }
 
-// ── ADD RULE ─────────────────────────────────────────────────────────────────
-function openAddRuleModal() {
-  const nextNum = getAllRules().length + 1;
-  document.getElementById('newRuleId').textContent = `§ ${nextNum}`;
-  document.getElementById('newRuleDesc').value = '';
-  document.getElementById('newRuleAmt').value  = '';
-  document.getElementById('addRuleOverlay').classList.add('open');
-}
+    function toggleRule(id) {
+      const rule = getAllRules().find(r => r.id === id);
+      if (!rule) return;
+      const k = rk(rule);
+      const el = document.getElementById('rr_' + k);
+      if (selRules.has(id)) { selRules.delete(id); el.classList.remove('sel'); }
+      else { selRules.add(id); el.classList.add('sel'); }
+      calcTotal();
+    }
 
-function closeAddRuleModal() {
-  document.getElementById('addRuleOverlay').classList.remove('open');
-}
+    function calcTotal() {
+      let t = 0;
+      selRules.forEach(id => {
+        const rule = RULES.find(r => r.id === id);
+        if (rule) t += ruleAmt(rule);
+      });
+      document.getElementById('mtotal').textContent = t + ' kr';
+    }
 
-function onAddRuleOvClick(e) {
-  if (e.target.id === 'addRuleOverlay') closeAddRuleModal();
-}
+    // ── SUBMIT ───────────────────────────────────────────────────────────────────
+    function submitFine() {
+      if (!selPl) { alert('Vælg en spiller.'); return; }
+      if (!selRules.size) { alert('Vælg mindst én regel.'); return; }
 
-function submitNewRule() {
-  const desc = document.getElementById('newRuleDesc').value.trim();
-  const amt  = parseInt(document.getElementById('newRuleAmt').value);
-  if (!desc)        { alert('Tilføj en beskrivelse.');         return; }
-  if (isNaN(amt) || amt < 1) { alert('Indtast et gyldigt beløb.'); return; }
+      const rules = [];
+      let total = 0;
 
-  const nextNum = getAllRules().length + 1;
-  customRules.push({
-    id:     `§ ${nextNum}`,
-    title:  desc,
-    full:   desc,
-    amt,
-    custom: true
-  });
-  saveCustomRules();
-  closeAddRuleModal();
-  renderAll();
-}
+      selRules.forEach(id => {
+        const rule = getAllRules().find(r => r.id === id);
+        if (!rule) return;
+        const a = ruleAmt(rule);
+        const k = rk(rule);
+        let note = '';
+        if (rule.extra) {
+          const el = document.getElementById('x_' + k);
+          if (rule.extra.type === 'check' && el?.checked) note = rule.extra.label.replace(/ \(\+\d+ kr\)$/, '');
+          else if (rule.extra.type === 'xg' && el?.value) note = 'xG: ' + el.value;
+          else if (rule.extra.type === 'custom' && el?.value) note = el.value + ' kr';
+        }
+        rules.push({ id, amt: a, note });
+        total += a;
+      });
 
-function deleteCustomRule(idx) {
-  if (!confirm('Slet denne regel?')) return;
-  customRules.splice(idx, 1);
-  saveCustomRules();
-  renderAll();
-}
+      fines.push({
+        id: uid(),
+        player: selPl,
+        rules,
+        amt: total,
+        note: document.getElementById('fnote')?.value?.trim() || '',
+        ts: Date.now()
+      });
 
-// ── VIOLATION STATS TABLE ────────────────────────────────────────────────────
-function renderViolationStats() {
-  const el = document.getElementById('vstable');
-  const all = getAllRules();
-  const active = all.filter(r => totalRuleViolations(r.id) > 0)
-                    .sort((a, b) => totalRuleViolations(b.id) - totalRuleViolations(a.id));
-  if (!active.length) {
-    el.innerHTML = '<div class="hempty">Ingen overtrædelser endnu</div>';
-    return;
-  }
-  el.innerHTML = `<table>
+      save();
+      closeModal();
+      renderAll();
+    }
+
+    // ── ADD RULE ─────────────────────────────────────────────────────────────────
+    function openAddRuleModal() {
+      const nextNum = getAllRules().length + 1;
+      document.getElementById('newRuleId').textContent = `§ ${nextNum}`;
+      document.getElementById('newRuleDesc').value = '';
+      document.getElementById('newRuleAmt').value = '';
+      document.getElementById('addRuleOverlay').classList.add('open');
+    }
+
+    function closeAddRuleModal() {
+      document.getElementById('addRuleOverlay').classList.remove('open');
+    }
+
+    function onAddRuleOvClick(e) {
+      if (e.target.id === 'addRuleOverlay') closeAddRuleModal();
+    }
+
+    function submitNewRule() {
+      const desc = document.getElementById('newRuleDesc').value.trim();
+      const amt = parseInt(document.getElementById('newRuleAmt').value);
+      if (!desc) { alert('Tilføj en beskrivelse.'); return; }
+      if (isNaN(amt) || amt < 1) { alert('Indtast et gyldigt beløb.'); return; }
+
+      const nextNum = getAllRules().length + 1;
+      customRules.push({
+        id: `§ ${nextNum}`,
+        title: desc,
+        full: desc,
+        amt,
+        custom: true
+      });
+      saveCustomRules();
+      closeAddRuleModal();
+      renderAll();
+    }
+
+    function deleteCustomRule(idx) {
+      if (!confirm('Slet denne regel?')) return;
+      customRules.splice(idx, 1);
+      saveCustomRules();
+      renderAll();
+    }
+
+    // ── VIOLATION STATS TABLE ────────────────────────────────────────────────────
+    function renderViolationStats() {
+      const el = document.getElementById('vstable');
+      const all = getAllRules();
+      const active = all.filter(r => totalRuleViolations(r.id) > 0)
+        .sort((a, b) => totalRuleViolations(b.id) - totalRuleViolations(a.id));
+      if (!active.length) {
+        el.innerHTML = '<div class="hempty">Ingen overtrædelser endnu</div>';
+        return;
+      }
+      el.innerHTML = `<table>
     <thead><tr>
       <th>Regel</th>
       ${PLAYERS.map(p => `<th>${p}</th>`).join('')}
@@ -988,21 +643,43 @@ function renderViolationStats() {
     </tr></thead>
     <tbody>
     ${active.map(r => {
-      const counts = ruleViolationsByPlayer(r.id);
-      const total  = totalRuleViolations(r.id);
-      return `<tr>
+        const counts = ruleViolationsByPlayer(r.id);
+        const total = totalRuleViolations(r.id);
+        return `<tr>
         <td><span class="vs-rid">${r.id}</span> <span class="vs-name">${r.title}</span></td>
         ${PLAYERS.map(p => `<td class="vs-cnt${counts[p] ? '' : ' zero'}">${counts[p] || '–'}</td>`).join('')}
         <td class="vs-total">${total}</td>
       </tr>`;
-    }).join('')}
+      }).join('')}
     </tbody>
   </table>`;
-}
+    }
 
-// ── INIT ─────────────────────────────────────────────────────────────────────
-seedIfEmpty();
-renderAll();
-</script>
+    function historyDisplay(btn) {
+      var rows = document.getElementsByClassName('hrow')
+      for (var i = 0; i < rows.length; i++) {
+        if (rows[i].style.display === 'none') {
+          rows[i].style.display = 'flex';
+          btn.textContent = 'Skjul historik'
+          continue;
+        }
+        else {
+          rows[i].style.display = 'none';
+          btn.textContent = 'Vis historik'
+          continue;
+        }
+      
+
+      }
+
+    }
+
+
+
+    // ── INIT ─────────────────────────────────────────────────────────────────────
+    seedIfEmpty();
+    renderAll();
+  </script>
 </body>
+
 </html>
